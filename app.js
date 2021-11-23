@@ -23,14 +23,14 @@ app.post("/register", async (req, res) => {
 
   if (existingUser) return res.status(400).send("User already exists");
 
-  const user = new User({
+  const encryptedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
     firstName,
     lastName,
-    email,
-    password,
+    email: email.toLowerCase(),
+    password: encryptedPassword,
   });
-
-  User.create(user);
 });
 
 module.exports = app;
