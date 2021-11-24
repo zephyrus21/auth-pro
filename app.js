@@ -6,12 +6,14 @@ connect();
 const express = require("express");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const User = require("./model/user");
 const auth = require("./middleware/auth");
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello Bitch</h1>");
@@ -73,7 +75,18 @@ app.post("/login", async (req, res) => {
 
     user.password = undefined;
 
-    res.status(200).json(user);
+    // res.status(200).json(user);
+
+    const options = {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      httpOnly: true,
+    };
+
+    res.status(200).cookie("token", token, options).json({
+      success: true,
+      user,
+      token,
+    });
   } catch (error) {
     console.log(error);
   }

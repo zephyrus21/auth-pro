@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
   const token =
-    req.header("Authorization").replace("Bearer ", "") ||
     req.cookies.token ||
+    req.header("Authorization").replace("Bearer ", "") ||
     req.body.token;
 
   if (!token) return res.status(401).send("Invalid token");
