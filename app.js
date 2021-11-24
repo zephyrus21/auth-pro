@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs/dist/bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("./model/user");
+const auth = require("./middleware/auth");
 
 const app = express();
 app.use(express.json());
@@ -76,6 +77,10 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+app.get("/user", auth, (req, res) => {
+  res.send("Hello User");
 });
 
 module.exports = app;
